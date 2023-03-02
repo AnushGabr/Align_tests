@@ -19,10 +19,38 @@ def get_url(url):
     get_wait = Wait(driver)
 
 
+class TestsForRadioButtons:
+    get_url('https://courses.letskodeit.com/practice')
+
+    def test_only_one_radio_button_is_selected(self):
+        bmw_button = get_wait.wait_for_element_to_be_clickable(By.CSS_SELECTOR, "#bmwradio")
+        benz_button = driver.find_element(By.CSS_SELECTOR, "#benzradio")
+        honda_button = driver.find_element(By.CSS_SELECTOR, "#hondaradio")
+
+        assert not bmw_button.is_selected()
+        bmw_button.click()
+
+        assert bmw_button.is_selected()
+        assert not benz_button.is_selected()
+        assert not honda_button.is_selected()
+
+        assert not benz_button.is_selected()
+        benz_button.click()
+
+        assert benz_button.is_selected()
+        assert not honda_button.is_selected()
+        assert not bmw_button.is_selected()
+
+        assert not honda_button.is_selected()
+        honda_button.click()
+        assert honda_button.is_selected()
+        assert not bmw_button.is_selected()
+        assert not benz_button.is_selected()
+
+
 class TestsForCheckButtons:
 
     def test_only_one_checkbox_button_is_selected(self):
-        get_url('https://courses.letskodeit.com/practice')
         bmw_check = get_wait.wait_for_element_to_be_clickable(By.CSS_SELECTOR, "#bmwcheck")
         benz_check = driver.find_element(By.CSS_SELECTOR, "#benzcheck")
         honda_check = driver.find_element(By.CSS_SELECTOR, "#hondacheck")
@@ -79,8 +107,44 @@ class TestsForCheckButtons:
 
         bmw_check.click()
 
+        assert not bmw_check.is_selected()
         assert benz_check.is_selected()
         assert honda_check.is_selected()
+
+
+class TestsForSwitchWindow:
+
+    def test_is_new_window_opened(self):
+        button = get_wait.wait_for_element_to_be_clickable(By.CSS_SELECTOR, "#openwindow")
+        button.click()
+
+        original_window = driver.current_window_handle
+
+        for window_handle in driver.window_handles:
+            if window_handle != original_window:
+                driver.switch_to.window(window_handle)
+                search_form = get_wait.wait_for_element(By.CSS_SELECTOR, '#search')
+                assert search_form
+                break
+        driver.close()
+        driver.switch_to.window(original_window)
+
+
+class TestForSwitchTab:
+
+    def test_is_new_tab_opened(self):
+        button = get_wait.wait_for_element_to_be_clickable(By.CSS_SELECTOR, "#opentab")
+        button.click()
+        original_window = driver.current_window_handle
+
+        for window_handle in driver.window_handles:
+            if window_handle != original_window:
+                driver.switch_to.window(window_handle)
+                search_form = get_wait.wait_for_element(By.CSS_SELECTOR, '#search')
+                assert search_form
+                break
+        driver.close()
+        driver.switch_to.window(original_window)
 
 
 
