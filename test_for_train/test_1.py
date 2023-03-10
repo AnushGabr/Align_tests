@@ -1,12 +1,9 @@
 import pytest
-from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from wait.wait import Wait
 from selenium.webdriver.support.select import Select
 
 
-@pytest.mark.usefixtures('get_driver')
 class TestsForRadioButtons:
 
     def test_only_one_radio_button_is_selected(self):
@@ -35,7 +32,6 @@ class TestsForRadioButtons:
         assert not benz_button.is_selected()
 
 
-@pytest.mark.usefixtures("get_driver")
 class TestsForCheckButtons:
 
     def test_only_one_checkbox_button_is_selected(self):
@@ -100,7 +96,6 @@ class TestsForCheckButtons:
         assert honda_check.is_selected()
 
 
-@pytest.mark.usefixtures("get_driver")
 class TestsForSwitchWindow:
 
     def test_is_new_window_opened(self):
@@ -119,7 +114,6 @@ class TestsForSwitchWindow:
         self.driver.switch_to.window(original_window)
 
 
-@pytest.mark.usefixtures("get_driver")
 class TestForSwitchTab:
 
     def test_is_new_tab_opened(self):
@@ -137,7 +131,6 @@ class TestForSwitchTab:
         self.driver.switch_to.window(original_window)
 
 
-@pytest.mark.usefixtures("get_driver")
 class TestForDropDown:
     def test_dropdown(self):
         cars = self.get_wait.wait_for_element(By.CSS_SELECTOR, 'select[id="carselect"]')
@@ -152,7 +145,6 @@ class TestForDropDown:
         assert cars_select.first_selected_option.text == "Honda"
 
 
-@pytest.mark.usefixtures('get_driver')
 class TestForAutoSuggestExample():
 
     def test_is_input_text_is_saved(self):
@@ -163,7 +155,7 @@ class TestForAutoSuggestExample():
 
         assert input_field.get_attribute('value') == 'search'
 
-@pytest.mark.usefixtures('get_driver')
+
 class TestForDisableEnabledField():
 
     def test_disabled(self):
@@ -184,7 +176,7 @@ class TestForDisableEnabledField():
 
         assert disabled_input.get_attribute('value') == 'enable'
 
-@pytest.mark.usefixtures('get_driver')
+
 class TestForHiddenElement:
 
     def is_element_hidden(self):
@@ -200,7 +192,7 @@ class TestForHiddenElement:
         show_button.click()
         assert input.is_displayed()
 
-@pytest.mark.usefixtures('get_driver')
+
 class TestForAlert:
 
     def test_alert(self):
@@ -216,7 +208,6 @@ class TestForAlert:
         assert alert.text == f'Hello {name_1}, share this practice page and share your knowledge'
         alert.accept()
 
-
         input.send_keys(name_1)
         confirm_button.click()
         confirm = self.driver.switch_to.alert
@@ -224,7 +215,7 @@ class TestForAlert:
         assert confirm.text == f'Hello {name_1}, Are you sure you want to confirm?'
         confirm.dismiss()
 
-@pytest.mark.usefixtures('get_driver')
+
 class TestsForHover:
 
     def test_hover_elements(self):

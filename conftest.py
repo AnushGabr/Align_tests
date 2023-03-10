@@ -2,60 +2,36 @@ import pytest
 from selenium import webdriver
 from wait.wait import Wait
 from selenium.webdriver.chrome.options import Options
-
-chrome_options = Options()
-chrome_options.add_experimental_option("detach", True)
-
-
+from selenium.webdriver.edge.service import Service
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 
 
-#----------------
-
-@pytest.fixture(scope='class')
-def get_driver(request, browser):
-    if browser == 'chrome':
-        driver = webdriver.Chrome(options=chrome_options)
-        driver.get('https://courses.letskodeit.com/practice')
-
-        get_wait = Wait(driver)
-        request.cls.driver = driver
-        request.cls.get_wait = get_wait
-        yield driver
-        driver.close()
+@pytest.fixture(scope='class', autouse=True)
+def get_driver(request):
+    browser = request.config.getoption('--browser')
+    url = request.config.getoption('--url')
+    if browser.lower() == 'chrome':
+        driver = webdriver.Chrome()
     elif browser == 'edge':
-         from selenium.webdriver.edge.service import Service
-         service = Service(executable_path="C:\\Drivers\\msedgedriver.exe")
-         driver = webdriver.Edge()
-         driver.get("https://courses.letskodeit.com/practice")
-
-         get_wait = Wait(driver)
-         request.cls.driver = driver
-         request.cls.get_wait = get_wait
-         yield driver
-         driver.close()
+        service = Service(executable_path="C:\\Drivers\\msedgedriver.exe")
+        driver = webdriver.Edge()
     elif browser == 'firefox':
-        from selenium.webdriver.firefox.options import Options
-        from selenium.webdriver.firefox.service import Service
-
         service = Service(executable_path=r'C:\Drivers\geckodriver.exe')
         driver = webdriver.Firefox()
-        #driver = webdriver.Firefox(executable_path=r'C:\Drivers\geckodriver.exe')
-        driver.get("https://courses.letskodeit.com/practice")
-
-        get_wait = Wait(driver)
-        request.cls.driver = driver
-        request.cls.get_wait = get_wait
-        yield driver
-        driver.close()
     else:
         print('Error')
 
+    get_wait = Wait(driver)
+    driver.get(url)
+    request.cls.driver = driver
+    request.cls.get_wait = get_wait
+    # yield driver
+    # driver.close()
 
 
 def pytest_addoption(parser):
     parser.addoption("--browser")
+    parser.addoption('--url')
 
-@pytest.fixture(scope='session', autouse=True)
-def browser(request):
-    return request.config.getoption("--browser")
 

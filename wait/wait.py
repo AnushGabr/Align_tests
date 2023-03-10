@@ -20,7 +20,7 @@ class Wait:
         return element
 
     def wait_for_element_to_be_clickable(self, locator_type, locator,
-                         timeout=10):
+                                         timeout=50):
         element = None
         try:
             by_type = get_by_type(locator_type)
